@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>KRISHI Community Login</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f9f2;
+      padding: 30px;
+      text-align: center;
+    }
+    .box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    input {
+      margin: 8px;
+      padding: 10px;
+      width: 90%;
+      font-size: 16px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .status {
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>KRISHI Community Login</h2>
+    <input type="email" id="email" placeholder="Enter Email"><br>
+    <input type="password" id="password" placeholder="Enter Password"><br>
+    <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC9xqtxiu5B7Xn-GObtzXDMaI51LQmTT7I",
+      authDomain: "krishi-community.firebaseapp.com",
+      projectId: "krishi-community",
+      storageBucket: "krishi-community.firebasestorage.app",
+      messagingSenderId: "1090424528059",
+      appId: "1:1090424528059:web:cae9cf292fbf3d5cbb9d9e",
+      measurementId: "G-RK3E8TPQVK"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          document.getElementById("status").innerText = "✅ Registered Successfully!";
+        })
+        .catch((error) => {
+          document.getElementById("status").innerText = "❌ " + error.message;
+        });
+    }
+
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          document.getElementById("status").innerText = "✅ Login Successful!";
+        })
+        .catch((error) => {
+          document.getElementById("status").innerText = "❌ " + error.message;
+        });
+    }
+  </script>
+</body>
+</html>
