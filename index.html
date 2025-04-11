@@ -27,7 +27,7 @@
       text-align: center;
       color: #2f6d2f;
     }
-    input, select {
+    input {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -95,11 +95,10 @@
     const city = document.getElementById("city").value.trim();
     const state = document.getElementById("state").value.trim();
     const password = document.getElementById("password").value;
-
     const statusMsg = document.getElementById("statusMsg");
 
     if (mobile.length !== 10 || farmerid.length !== 12) {
-      alert("Please enter valid Mobile number and 12-digit Farmer ID");
+      alert("Please enter a valid Mobile number and 12-digit Farmer ID");
       return;
     }
 
@@ -107,7 +106,7 @@
       const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
       const user = userCredential.user;
 
-      const res = await fetch("https://krishi-login-new.onrender.com/api/register", {
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -123,10 +122,12 @@
         statusMsg.innerText = "❌ Already registered with this Mobile or Farmer ID.";
         await firebase.auth().signOut();
       } else if (data.status === "ok") {
+        // Payment step: Open payment URL
         window.location.href = data.payment_url;
       } else {
-        throw new Error("Unexpected response");
+        throw new Error("Unexpected response from server");
       }
+
     } catch (error) {
       console.error(error);
       statusMsg.style.display = "block";
@@ -134,12 +135,6 @@
       statusMsg.innerText = "❌ Error: " + error.message;
     }
   }
-
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-      window.location.href = "https://krishi-login-new.onrender.com/airdrop.html";
-    }
-  });
 </script>
 
 </body>
