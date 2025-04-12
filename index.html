@@ -74,73 +74,26 @@
   <div class="msg" id="statusMsg"></div>
 </div>
 
+<button type="button" onclick="redirectToPayU()">Pay ₹20 and Register</button>
+
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyC9xqtxiu5B7Xn-GObtzXDMaI51LQmTT7I",
-    authDomain: "krishi-community.firebaseapp.com",
-    projectId: "krishi-community",
-    storageBucket: "krishi-community.appspot.com",
-    messagingSenderId: "1090424528059",
-    appId: "1:1090424528059:web:cae9cf292fbf3d5cbb9d9e",
-    measurementId: "G-RK3E8TPQVK"
-  };
-  firebase.initializeApp(firebaseConfig);
+function redirectToPayU() {
+  // Optional: Validate form before redirecting
+  const mobile = document.getElementById("mobile").value;
+  const farmerid = document.getElementById("farmerid").value;
 
-  async function registerUser() {
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const mobile = document.getElementById("mobile").value.trim();
-    const farmerid = document.getElementById("farmerid").value.trim();
-    const village = document.getElementById("village").value.trim();
-    const city = document.getElementById("city").value.trim();
-    const state = document.getElementById("state").value.trim();
-    const password = document.getElementById("password").value;
-    const statusMsg = document.getElementById("statusMsg");
-
-    if (mobile.length !== 10 || farmerid.length !== 12) {
-      alert("Please enter a valid Mobile number and 12-digit Farmer ID");
-      return;
-    }
-
-    try {
-      const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      const user = userCredential.user;
-
-           const res = await fetch("https://krishi-backend-vwum.onrender.com/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name, email, mobile, farmerid, village, city, state, uid: user.uid
-        })
-      });
-
-      const text = await res.text();
-      let data = {};
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        throw new Error("Invalid response from server: " + text);
-      }
-
-      if (data.status === "exists") {
-        statusMsg.style.display = "block";
-        statusMsg.style.color = "red";
-        statusMsg.innerText = "❌ Already registered with this Mobile or Farmer ID.";
-        await firebase.auth().signOut();
-      } else if (data.status === "ok") {
-        // Payment step: Open payment URL
-        window.location.href = data.payment_url;
-      } else {
-        throw new Error("Unexpected response from server");
-      }
-
-    } catch (error) {
-      console.error(error);
-      statusMsg.style.display = "block";
-      statusMsg.style.color = "red";
-      statusMsg.innerText = "❌ Error: " + error.message;
-    }
+  if (!mobile || !farmerid) {
+    alert("Please enter both Mobile Number and Farmer ID.");
+    return;
   }
+
+  // Save the details to localStorage (optional for checking later)
+  localStorage.setItem("krishi_mobile", mobile);
+  localStorage.setItem("krishi_farmerid", farmerid);
+
+  // Redirect to PayU Button Link
+  window.location.href = "https://pmny.in/LIOYQhrtL18d";
+}
 </script>
 
 </body>
